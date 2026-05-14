@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAppUser } from "@/lib/auth";
 import { getStripe } from "@/lib/stripe";
 
-const APP_BASE_URL = "https://nurturely.vercel.app";
+const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://nurturely.vercel.app";
 
 export async function POST(request: Request) {
   try {
