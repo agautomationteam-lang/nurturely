@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  clerkUserId       String    @id
+  email             String
+  name              String?
+  timezone          String    @default("UTC")
+  dailyPeaceEmail   String?
+  dailyPeaceEnabled Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+  subscription      Subscription?
+  chats             Chat[]
+  stories           Story[]
+  activities        Activity[]
+  dailyPeace        DailyPeace?
+  usage             Usage?
+}
+
+model Subscription {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [clerkUserId])
+  stripeCustomerId  String?  @unique
+  stripeSubscriptionId String? @unique
+  stripePriceId     String?
+  status            SubscriptionStatus @default(FREE)
+  currentPeriodEnd  DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum SubscriptionStatus {
+  FREE
+  ACTIVE
+  CANCELED
+  PAST_DUE
+}
+
+model Chat {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [clerkUserId])
+  question  String
+  answer    String   @db.Text
+  category  String?
+  createdAt DateTime @default(now())
+}
+
+model Story {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [clerkUserId])
+  childName   String
+  childAge    Int
+  theme       String
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [clerkUserId])
+  childAge    Int
+  duration    Int
+  location    String
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+}
+
+model DailyPeace {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [clerkUserId])
+  email       String
+  time        String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Usage {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [clerkUserId])
+  date        String
+  chatCount   Int      @default(0)
+  storyCount  Int      @default(0)
+  activityCount Int    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StripeEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now())
+}
