@@ -2,13 +2,15 @@ import { NextResponse } from "next/server";
 import { requireAppUser } from "@/lib/auth";
 import { getStripe } from "@/lib/stripe";
 
-const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://nurturely.vercel.app";
+function appBaseUrl() {
+  return process.env.NEXT_PUBLIC_APP_URL || "https://nurturely-nu.vercel.app";
+}
 
 export async function POST(request: Request) {
   try {
     const user = await requireAppUser();
     if (!user.subscription?.stripeCustomerId) return NextResponse.json({ error: "No Stripe customer found" }, { status: 400 });
-    const origin = request.headers.get("origin") || APP_BASE_URL;
+    const origin = request.headers.get("origin") || appBaseUrl();
     const session = await getStripe().billingPortal.sessions.create({
       customer: user.subscription.stripeCustomerId,
       return_url: `${origin}/dashboard/settings`

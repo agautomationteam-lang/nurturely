@@ -15,7 +15,7 @@ export async function requireAppUser() {
 
   const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || clerkUser.username || null;
 
-  return prisma.user.upsert({
+  const user = await prisma.user.upsert({
     where: { clerkUserId: clerkUser.id },
     create: {
       clerkUserId: clerkUser.id,
@@ -25,6 +25,29 @@ export async function requireAppUser() {
       usage: { create: { date: localDateKey("UTC") } }
     },
     update: { email, name, deletedAt: null },
+    include: { subscription: true, usage: true, dailyPeace: true }
+  });
+
+  if (!user.subscription) {
+    await prisma.subscription.upsert({
+      where: { userId: user.clerkUserId },
+      create: { userId: user.clerkUserId, status: "FREE" },
+      update: {}
+    });
+  }
+
+  if (!user.usage) {
+    await prisma.usage.upsert({
+      where: { userId: user.clerkUserId },
+      create: { userId: user.clerkUserId, date: localDateKey(user.timezone || "UTC") },
+      update: {}
+    });
+  }
+
+  if (user.subscription && user.usage) return user;
+
+  return prisma.user.findUniqueOrThrow({
+    where: { clerkUserId: user.clerkUserId },
     include: { subscription: true, usage: true, dailyPeace: true }
   });
 }
