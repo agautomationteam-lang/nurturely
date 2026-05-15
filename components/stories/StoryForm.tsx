@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 import { WandSparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -21,14 +22,17 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+type RecentStory = { id: string; childName: string; theme: string; content: string; createdAt: string };
 
-export function StoryForm() {
+export function StoryForm({ recentStories = [] }: { recentStories?: RecentStory[] }) {
   const [story, setStory] = useState("");
   const [loading, setLoading] = useState(false);
-  const form = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { childName: "", childAge: 4, theme: "animals" } });
+  const [error, setError] = useState("");
+  const form = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { childName: "", childAge: 4, theme: "Animals" } });
 
   async function onSubmit(values: FormValues) {
     setLoading(true);
+    setError("");
     try {
       const response = await fetch("/api/story", {
         method: "POST",
@@ -40,7 +44,9 @@ export function StoryForm() {
       setStory(data.story);
       toast.success("Story ready");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not generate story");
+      const message = error instanceof Error ? error.message : "Something went wrong. Try again →";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -49,6 +55,8 @@ export function StoryForm() {
   if (story) return <StoryDisplay story={story} onNew={() => setStory("")} />;
 
   return (
+    <div className="space-y-5">
+    <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
     <Card>
       <div className="mb-6 flex items-start gap-3">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] bg-primary-light text-primary">
@@ -73,7 +81,7 @@ export function StoryForm() {
         </div>
         <div>
           <Label>Theme</Label>
-          <Select defaultValue="animals" onValueChange={(value) => form.setValue("theme", value as FormValues["theme"])}>
+          <Select defaultValue="Animals" onValueChange={(value) => form.setValue("theme", value as FormValues["theme"])}>
             <SelectTrigger className="mt-2">
               <SelectValue />
             </SelectTrigger>
@@ -86,10 +94,24 @@ export function StoryForm() {
             </SelectContent>
           </Select>
         </div>
+        {error ? <p className="rounded-button bg-danger/10 px-3 py-2 text-sm font-semibold text-danger">{error}</p> : null}
         <Button type="submit" size="lg" disabled={loading}>
-          {loading ? "Generating..." : "Generate Story"}
+          {loading ? "Weaving your story..." : "Generate Story"}
         </Button>
       </form>
     </Card>
+    </motion.div>
+    {recentStories.length ? (
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold text-text-primary">Last 3 stories</h2>
+        {recentStories.map((item) => (
+          <details key={item.id} className="rounded-card border border-primary/10 bg-white p-4 shadow-sm">
+            <summary className="cursor-pointer font-semibold text-text-primary">{item.childName} and {item.theme}</summary>
+            <p className="mt-3 line-clamp-4 whitespace-pre-wrap text-sm leading-6 text-text-secondary">{item.content}</p>
+          </details>
+        ))}
+      </section>
+    ) : null}
+    </div>
   );
 }

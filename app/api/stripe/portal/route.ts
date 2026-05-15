@@ -9,7 +9,7 @@ function appBaseUrl() {
 export async function POST(request: Request) {
   try {
     const user = await requireAppUser();
-    if (!user.subscription?.stripeCustomerId) return NextResponse.json({ error: "No Stripe customer found" }, { status: 400 });
+    if (!user.subscription?.stripeCustomerId) return NextResponse.json({ error: "Payment service unavailable, try again" }, { status: 404 });
     const origin = request.headers.get("origin") || appBaseUrl();
     const session = await getStripe().billingPortal.sessions.create({
       customer: user.subscription.stripeCustomerId,
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Could not open portal" }, { status: 400 });
+    console.error("Stripe portal error", error);
+    return NextResponse.json({ error: "Payment service unavailable, try again" }, { status: 503 });
   }
 }

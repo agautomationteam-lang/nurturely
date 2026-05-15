@@ -10,7 +10,9 @@ export async function POST(request: Request) {
   try {
     const user = await requireAppUser();
     const { priceId } = await request.json();
-    if (!priceId) return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
+    if (!priceId || typeof priceId !== "string" || !priceId.startsWith("price_")) {
+      return NextResponse.json({ error: "Payment service unavailable, try again" }, { status: 503 });
+    }
     const origin = request.headers.get("origin") || appBaseUrl();
     const session = await getStripe().checkout.sessions.create({
       mode: "subscription",
@@ -18,12 +20,13 @@ export async function POST(request: Request) {
       customer_email: user.subscription?.stripeCustomerId ? undefined : user.email,
       client_reference_id: user.clerkUserId,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${origin}/dashboard?success=1`,
-      cancel_url: `${origin}/dashboard?canceled=1`,
+      success_url: `${origin}/dashboard?upgraded=true`,
+      cancel_url: `${origin}/?canceled=true`,
       metadata: { userId: user.clerkUserId }
     });
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Could not create checkout session" }, { status: 400 });
+    console.error("Stripe checkout error", error);
+    return NextResponse.json({ error: "Payment service unavailable, try again" }, { status: 503 });
   }
 }

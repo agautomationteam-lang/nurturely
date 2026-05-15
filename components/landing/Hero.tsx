@@ -1,19 +1,40 @@
+"use client";
+
 import Link from "next/link";
 import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
 import { ArrowRight, Mail } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+const words = "Parenting is hard. Getting peace of mind shouldn't be.".split(" ");
+
 export function Hero() {
+  const { scrollYProgress } = useScroll();
+  const background = useTransform(scrollYProgress, [0, 1], [
+    "radial-gradient(circle at 20% 20%, rgba(216,243,220,0.95), transparent 34%), radial-gradient(circle at 80% 10%, rgba(244,162,97,0.18), transparent 30%)",
+    "radial-gradient(circle at 70% 25%, rgba(216,243,220,0.95), transparent 34%), radial-gradient(circle at 20% 10%, rgba(244,162,97,0.18), transparent 30%)"
+  ]);
+
   return (
-    <section className="mx-auto grid max-w-content gap-10 px-4 pb-16 pt-10 md:grid-cols-[1.05fr_0.95fr] md:items-center md:px-6 lg:pt-16">
+    <motion.section style={{ background }} className="mx-auto grid max-w-content gap-10 rounded-[36px] px-4 pb-16 pt-10 md:grid-cols-[1.05fr_0.95fr] md:items-center md:px-6 lg:pt-16">
       <div className="space-y-7">
         <div className="inline-flex rounded-full bg-primary-light px-4 py-2 text-sm font-medium text-primary">
           Type a worry. Get peace of mind in 10 seconds.
         </div>
         <div className="space-y-5">
           <h1 className="max-w-3xl text-4xl font-semibold leading-tight text-text-primary sm:text-5xl lg:text-6xl">
-            Parenting is hard. Getting peace of mind shouldn&apos;t be.
+            {words.map((word, index) => (
+              <motion.span
+                key={`${word}-${index}`}
+                className="mr-3 inline-block"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.055, duration: 0.45 }}
+              >
+                {word}
+              </motion.span>
+            ))}
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-text-secondary">
             Nurturely gives parents warm, practical AI support for worries, bedtime stories, activity ideas, and morning encouragement.
@@ -26,7 +47,7 @@ export function Hero() {
           </div>
           <SignedOut>
             <SignUpButton mode="modal">
-              <Button variant="accent" size="lg">
+              <Button variant="accent" size="lg" className="transition hover:scale-[1.03] hover:shadow-xl">
                 Get Started Free <ArrowRight className="h-4 w-4" />
               </Button>
             </SignUpButton>
@@ -38,12 +59,14 @@ export function Hero() {
           </SignedIn>
         </div>
       </div>
-      <div className="relative min-h-[430px] overflow-hidden rounded-[32px] bg-primary-light p-5 shadow-soft">
+      <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} className="relative min-h-[430px] overflow-hidden rounded-[32px] bg-primary-light p-5 shadow-soft">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(244,162,97,0.35),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(82,183,136,0.35),transparent_28%)]" />
         <div className="relative flex h-full flex-col justify-end gap-4">
           <div className="max-w-sm rounded-card bg-white p-5 shadow-soft">
             <p className="text-sm font-semibold text-primary">You asked</p>
-            <p className="mt-2 text-text-primary">My 4-year-old melts down every night at bedtime. Is this normal?</p>
+            <p className="mt-2 text-text-primary">
+              My 4-year-old melts down every night at bedtime. Is this normal?<span className="ml-1 inline-block h-5 w-0.5 animate-pulse bg-primary align-middle" />
+            </p>
           </div>
           <div className="ml-auto max-w-md rounded-card bg-white p-5 shadow-soft">
             <p className="text-sm font-semibold text-primary">Nurturely</p>
@@ -55,7 +78,7 @@ export function Hero() {
             </p>
           </div>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

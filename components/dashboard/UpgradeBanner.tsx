@@ -17,10 +17,10 @@ export function UpgradeBanner() {
         body: JSON.stringify({ priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Could not start checkout");
+      if (!response.ok) throw new Error(data.error || "Payment service unavailable, try again");
       window.location.href = data.url;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not start checkout");
+      toast.error(error instanceof Error ? error.message : "Payment service unavailable, try again");
     } finally {
       setLoading(false);
     }

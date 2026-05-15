@@ -1,9 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { CheckCircle2, Mail, MessageSquare } from "lucide-react";
+import { CheckCircle2, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { requireAppUser } from "@/lib/auth";
@@ -12,7 +11,7 @@ import { prisma } from "@/lib/db";
 async function saveDailyPeace(formData: FormData) {
   "use server";
   const user = await requireAppUser();
-  const email = String(formData.get("email") || "");
+  const email = user.email;
   const time = String(formData.get("time") || "08:00");
   const isActive = formData.get("isActive") === "on";
 
@@ -44,29 +43,26 @@ export default async function DailyPeacePage({ searchParams }: { searchParams?: 
       </div>
       {saved ? (
         <div className="flex items-center gap-2 rounded-card border border-success/25 bg-[#f1fff6] px-4 py-3 text-sm font-semibold text-primary">
-          <CheckCircle2 className="h-5 w-5 text-success" /> Daily Peace settings saved.
+          <CheckCircle2 className="h-5 w-5 text-success" /> Your daily peace email is set for {settings?.time || "08:00"}.
         </div>
       ) : null}
       <div className="grid gap-5 lg:grid-cols-[1fr_0.8fr]">
         <Card>
           <form action={saveDailyPeace} className="space-y-5">
             <div>
-              <Label htmlFor="email">Email address</Label>
-              <div className="relative mt-2">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-text-secondary" />
-                <Input id="email" name="email" required type="email" defaultValue={settings?.email || user.dailyPeaceEmail || user.email} placeholder="parent@example.com" className="pl-10" />
-              </div>
-            </div>
-            <div>
               <Label htmlFor="time">Delivery time</Label>
-              <Input id="time" name="time" type="time" defaultValue={settings?.time || "08:00"} className="mt-2" />
+              <select id="time" name="time" defaultValue={settings?.time || "08:00"} className="mt-2 h-11 w-full rounded-button border border-primary/15 bg-white px-3 text-sm text-text-primary outline-none focus:ring-2 focus:ring-primary/15">
+                {["06:00", "07:00", "08:00", "09:00", "10:00"].map((time) => (
+                  <option key={time} value={time}>{time}</option>
+                ))}
+              </select>
             </div>
-            <div className="flex items-center justify-between rounded-button bg-background p-4">
+            <div className="flex items-center justify-between rounded-[24px] bg-background p-5">
               <div>
                 <p className="font-medium text-text-primary">Daily emails</p>
-                <p className="text-sm text-text-secondary">Turn your morning encouragement on or off.</p>
+                <p className="text-sm text-text-secondary">{settings?.isActive === false ? "Turn it on when mornings need support." : "Your morning encouragement is ready."}</p>
               </div>
-              <Switch name="isActive" defaultChecked={settings?.isActive ?? true} />
+              <Switch name="isActive" defaultChecked={settings?.isActive ?? true} className="h-9 w-16 data-[state=checked]:bg-primary [&>span]:h-8 [&>span]:w-8 [&>span]:data-[state=checked]:translate-x-8" />
             </div>
             <Button type="submit" size="lg">Save Daily Peace</Button>
           </form>

@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { ActivityResult } from "@/types";
 
-export function ActivityCard({ activity }: { activity: ActivityResult }) {
+const icons = ["🧩", "🎨", "🌿"];
+
+export function ActivityCard({ activity, index = 0 }: { activity: ActivityResult; index?: number }) {
   const [done, setDone] = useState(false);
   return (
     <Card className={done ? "border-success bg-[#f7fff9]" : ""}>
+      <div className="mb-3 text-3xl">{icons[index % icons.length]}</div>
       <h3 className="text-xl font-semibold text-text-primary">{activity.title}</h3>
       <div>
         <p className="text-sm font-semibold text-primary">Materials</p>

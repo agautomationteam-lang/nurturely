@@ -48,7 +48,7 @@ export function Sidebar() {
           </Avatar>
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-text-primary">{user?.firstName || "Parent"}</p>
-            <p className="truncate text-xs text-text-secondary">{user?.primaryEmailAddress?.emailAddress}</p>
+            <p className="truncate text-xs text-text-secondary">Nurturely member</p>
           </div>
         </div>
         <SignOutButton redirectUrl="/">

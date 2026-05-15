@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { HeartPulse, Send, ShieldCheck } from "lucide-react";
+import { Check, HeartPulse, Send, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageBubble } from "@/components/chat/MessageBubble";
@@ -66,7 +67,6 @@ export function ChatInterface() {
         <div ref={bottomRef} />
       </div>
       <form onSubmit={onSubmit} className="border-t border-primary/10 bg-white p-4">
-        {category ? <p className="mb-2 text-sm font-medium text-primary">Nurturely will answer through a {category.toLowerCase()} lens.</p> : null}
         <div className="mb-3 flex flex-wrap gap-2">
           {categories.map((chip) => (
             <button
@@ -76,10 +76,21 @@ export function ChatInterface() {
               aria-pressed={category === chip}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition ${category === chip ? "bg-primary text-white shadow-sm" : "bg-primary-light text-primary hover:bg-[#c7ebcf]"}`}
             >
-              {chip}
+              {category === chip ? <Check className="mr-1 inline h-3.5 w-3.5" /> : null}{chip}
             </button>
           ))}
         </div>
+        <AnimatePresence>
+          {messages.length > 1 && !loading ? (
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-3 flex flex-wrap gap-2">
+              {["What should I try first?", "What is normal here?", "When should I ask for help?"].map((suggestion) => (
+                <button key={suggestion} type="button" onClick={() => setInput(suggestion)} className="rounded-full border border-primary/15 bg-white px-3 py-1.5 text-xs font-semibold text-primary">
+                  {suggestion}
+                </button>
+              ))}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
         <div className="flex gap-3">
           <Textarea
             value={input}

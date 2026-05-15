@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { CTA } from "@/components/landing/CTA";
 import { Features } from "@/components/landing/Features";
 import { Hero } from "@/components/landing/Hero";
@@ -8,7 +10,10 @@ import { Testimonials } from "@/components/landing/Testimonials";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/Logo";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { userId } = await auth();
+  if (userId) redirect("/dashboard");
+
   return (
     <main>
       <header className="mx-auto flex max-w-content items-center justify-between px-4 py-5 md:px-6">
@@ -38,11 +43,13 @@ export default function LandingPage() {
       <Testimonials />
       <CTA />
       <footer className="mx-auto flex max-w-content flex-col gap-4 border-t border-primary/10 px-4 py-8 text-sm text-text-secondary md:flex-row md:items-center md:justify-between md:px-6">
-        <p>© 2026 Nurturely. Every parent deserves a calm moment.</p>
+        <p>© 2026 Nurturely. Built with love for parents.</p>
         <div className="flex gap-4">
           <Link href="/sign-in">Sign in</Link>
           <Link href="/sign-up">Create account</Link>
           <Link href="#pricing">Pricing</Link>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
         </div>
       </footer>
     </main>

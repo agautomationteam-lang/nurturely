@@ -8,6 +8,7 @@ export function useChat() {
   const { messages, addMessage, updateMessage } = useAppStore();
   const [loading, setLoading] = useState(false);
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
+  const [lastError, setLastError] = useState<string | null>(null);
 
   async function send(content: string, category?: string) {
     const trimmed = content.trim();
@@ -18,6 +19,7 @@ export function useChat() {
     addMessage({ id: assistantId, role: "assistant", content: "" });
     setStreamingMessageId(assistantId);
     setLoading(true);
+    setLastError(null);
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -47,13 +49,15 @@ export function useChat() {
         updateMessage(assistantId, answer);
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Something went wrong");
-      updateMessage(assistantId, "I could not answer that just now. Please try again in a moment.");
+      const message = error instanceof Error ? error.message : "Something went wrong. Try again.";
+      setLastError(message);
+      toast.error(message);
+      updateMessage(assistantId, message.includes("Upgrade") ? "You've used your 3 free interactions today. Upgrade for unlimited calm." : "Something went wrong. Try again →");
     } finally {
       setStreamingMessageId(null);
       setLoading(false);
     }
   }
 
-  return { messages, loading, streamingMessageId, send };
+  return { messages, loading, streamingMessageId, lastError, send };
 }

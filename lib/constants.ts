@@ -15,5 +15,5 @@ export const ACTIVITY_SYSTEM_PROMPT =
 export const DAILY_PEACE_SYSTEM_PROMPT =
   "Write one short, warm, reassuring parenting affirmation or tip. One paragraph, 2-4 sentences max. Like a best friend sending encouragement. Make it feel personal and timely. No generic platitudes. Something a stressed parent actually wants to read at [timeOfDay].";
 
-export const storyThemes = ["dinosaurs", "princesses", "space", "animals", "trucks", "magic", "ocean", "superheroes"] as const;
-export const categories = ["Sleep", "Behavior", "Food", "Emotions", "School"] as const;
+export const storyThemes = ["Adventure", "Animals", "Space", "Magic", "Friendship"] as const;
+export const categories = ["Sleep", "Food", "Behavior", "School", "Emotions", "Other"] as const;

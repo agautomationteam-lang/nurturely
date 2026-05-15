@@ -8,7 +8,7 @@ import { assertCanUseAI, incrementUsage } from "@/lib/usage";
 import type { ActivityResult } from "@/types";
 
 const schema = z.object({
-  childAge: z.coerce.number().int().min(1).max(12),
+  childAge: z.coerce.number().int().min(0).max(12),
   duration: z.coerce.number().int().min(15).max(60),
   location: z.enum(["indoor", "outdoor", "either"])
 });
