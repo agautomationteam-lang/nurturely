@@ -1,0 +1,62 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: cimg/node:20.18
+    working_directory: ~/project
+
+commands:
+  install_dependencies:
+    steps:
+      - restore_cache:
+          keys:
+            - npm-v1-{{ checksum "package-lock.json" }}
+            - npm-v1-
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: npm-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+
+jobs:
+  build_and_verify:
+    executor: node
+    steps:
+      - checkout
+      - install_dependencies
+      - run:
+          name: Generate Prisma client
+          command: npx prisma generate
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Build
+          command: npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy_production:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Deploy to Vercel production
+          command: npx vercel --prod --yes --token "$VERCEL_TOKEN"
+
+workflows:
+  web:
+    jobs:
+      - build_and_verify
+      - deploy_production:
+          requires:
+            - build_and_verify
+          filters:
+            branches:
+              only: main

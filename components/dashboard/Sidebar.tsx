@@ -11,11 +11,11 @@ import { cn, initials } from "@/lib/utils";
 
 const nav = [
   { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/dashboard/ask", label: "Ask", icon: MessageCircle },
-  { href: "/dashboard/stories", label: "Stories", icon: Moon },
-  { href: "/dashboard/activities", label: "Activities", icon: Sparkles },
+  { href: "/dashboard/ask", label: "Worry Coach", icon: MessageCircle },
+  { href: "/dashboard/stories", label: "Bedtime Stories", icon: Moon },
+  { href: "/dashboard/activities", label: "Play Ideas", icon: Sparkles },
   { href: "/dashboard/peace", label: "Daily Peace", icon: Heart },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings }
+  { href: "/dashboard/settings", label: "Account", icon: Settings }
 ];
 
 export function Sidebar() {
@@ -32,7 +32,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={cn("flex items-center gap-3 rounded-button px-3 py-2.5 text-sm font-medium text-text-secondary transition hover:bg-primary-light hover:text-primary", active && "bg-primary-light text-primary")}
+            className={cn("flex items-center gap-3 rounded-button px-3 py-3 text-sm font-semibold text-text-secondary transition hover:bg-primary-light hover:text-primary", active && "bg-primary-light text-primary")}
             >
               <item.icon className="h-4 w-4" />
               {item.label}

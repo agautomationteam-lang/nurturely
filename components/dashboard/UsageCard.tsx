@@ -9,13 +9,13 @@ export function UsageCard({ used, plan }: { used: number; plan: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Today&apos;s calm moments</CardTitle>
+        <CardTitle>Today&apos;s free AI moments</CardTitle>
         <CardDescription>
-          {unlimited ? "You have unlimited AI interactions today." : `You've used ${used} of ${FREE_DAILY_LIMIT} free questions today.`}
+          {unlimited ? "Peace Mode is active. Ask, create, and reset as often as you need." : `You've used ${used} of ${FREE_DAILY_LIMIT} free interactions today.`}
         </CardDescription>
       </CardHeader>
       <Progress value={unlimited ? 100 : pct} />
-      <p className="mt-3 text-sm text-text-secondary">{unlimited ? "Peace Mode is active." : `${Math.max(0, FREE_DAILY_LIMIT - used)} free interactions remaining.`}</p>
+      <p className="mt-3 text-sm text-text-secondary">{unlimited ? "You are covered." : `${Math.max(0, FREE_DAILY_LIMIT - used)} calm moments remaining before upgrade is needed.`}</p>
     </Card>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import DOMPurify from "isomorphic-dompurify";
-import { Moon, Save, Volume2, RotateCcw } from "lucide-react";
+import { Moon, Volume2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -25,18 +25,16 @@ export function StoryDisplay({ story, onNew }: { story: string; onNew: () => voi
           </span>
           <h2 className="text-xl font-semibold text-text-primary">Tonight&apos;s story</h2>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
           <Button variant="outline" size="sm" onClick={readAloud}>
             <Volume2 className="h-4 w-4" /> Read Aloud
-          </Button>
-          <Button variant="ghost" size="sm">
-            <Save className="h-4 w-4" /> Save
           </Button>
           <Button variant="ghost" size="sm" onClick={onNew}>
             <RotateCcw className="h-4 w-4" /> New Story
           </Button>
         </div>
       </div>
+      <p className="mb-5 rounded-button bg-primary-light px-4 py-3 text-sm text-primary">Saved automatically to your recent history.</p>
       <article className="whitespace-pre-wrap font-story text-xl leading-9 text-text-primary">{safeStory}</article>
     </Card>
   );

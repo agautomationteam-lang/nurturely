@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { WandSparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -49,15 +50,26 @@ export function StoryForm() {
 
   return (
     <Card>
+      <div className="mb-6 flex items-start gap-3">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] bg-primary-light text-primary">
+          <WandSparkles className="h-5 w-5" />
+        </span>
+        <div>
+          <h2 className="text-xl font-semibold text-text-primary">Build tonight&apos;s story</h2>
+          <p className="mt-1 text-sm leading-6 text-text-secondary">Use a real interest your child already loves. Familiar details help the story feel safe.</p>
+        </div>
+      </div>
       <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid gap-5 md:grid-cols-2">
         <div>
           <Label htmlFor="childName">Child&apos;s name</Label>
-          <Input id="childName" className="mt-2" {...form.register("childName")} />
+          <Input id="childName" className="mt-2" placeholder="Maya" {...form.register("childName")} />
           {form.formState.errors.childName ? <p className="mt-1 text-sm text-danger">{form.formState.errors.childName.message}</p> : null}
         </div>
         <div>
           <Label htmlFor="childAge">Age</Label>
           <Input id="childAge" className="mt-2" type="number" min={1} max={12} {...form.register("childAge")} />
+        </div>
         </div>
         <div>
           <Label>Theme</Label>

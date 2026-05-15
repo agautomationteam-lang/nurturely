@@ -49,7 +49,8 @@ export async function POST(request: Request) {
       }
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Could not answer";
-    return NextResponse.json({ error: message }, { status: error instanceof Error && error.name === "UsageLimitError" ? 403 : 400 });
+    const message = error instanceof Error ? error.message : "Nurturely could not answer right now";
+    const status = error instanceof Error && error.name === "UsageLimitError" ? 403 : message.includes("OPENAI_API_KEY") ? 503 : 400;
+    return NextResponse.json({ error: status === 503 ? "AI service is not configured. Check OPENAI_API_KEY." : message }, { status });
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { Clock, Home, Trees } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -38,6 +39,10 @@ export function ActivityForm() {
   return (
     <div className="space-y-5">
       <Card>
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-text-primary">Plan the next pocket of time</h2>
+          <p className="mt-1 text-sm text-text-secondary">No craft-store shopping list. Just real-life play that fits the day you have.</p>
+        </div>
         <div className="grid gap-6 md:grid-cols-3">
           <div>
             <Label>Child&apos;s age: {age}</Label>
@@ -48,7 +53,7 @@ export function ActivityForm() {
             <div className="mt-3 flex gap-2">
               {[15, 30, 60].map((value) => (
                 <Button key={value} type="button" variant={duration === value ? "default" : "outline"} onClick={() => setDuration(value)}>
-                  {value} min
+                  <Clock className="h-4 w-4" /> {value} min
                 </Button>
               ))}
             </div>
@@ -58,7 +63,7 @@ export function ActivityForm() {
             <div className="mt-3 flex gap-2">
               {["indoor", "outdoor", "either"].map((value) => (
                 <Button key={value} type="button" variant={location === value ? "default" : "outline"} onClick={() => setLocation(value)}>
-                  {value}
+                  {value === "outdoor" ? <Trees className="h-4 w-4" /> : <Home className="h-4 w-4" />} {value}
                 </Button>
               ))}
             </div>
@@ -69,11 +74,17 @@ export function ActivityForm() {
         </Button>
       </Card>
       {activities.length ? (
+        <>
+        <div>
+          <h2 className="text-xl font-semibold text-text-primary">Try one, save the rest for later</h2>
+          <p className="mt-1 text-sm text-text-secondary">Each idea includes the point of the play, not just the steps.</p>
+        </div>
         <div className="grid gap-4 lg:grid-cols-3">
           {activities.map((activity) => (
             <ActivityCard key={activity.title} activity={activity} />
           ))}
         </div>
+        </>
       ) : null}
     </div>
   );

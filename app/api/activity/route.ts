@@ -43,6 +43,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ activities });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not generate activities";
-    return NextResponse.json({ error: message }, { status: error instanceof Error && error.name === "UsageLimitError" ? 403 : 400 });
+    const status = error instanceof Error && error.name === "UsageLimitError" ? 403 : message.includes("OPENAI_API_KEY") ? 503 : 400;
+    return NextResponse.json({ error: status === 503 ? "Activity generation needs OPENAI_API_KEY configured." : message }, { status });
   }
 }

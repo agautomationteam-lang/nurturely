@@ -9,7 +9,7 @@ import type { ActivityResult } from "@/types";
 export function ActivityCard({ activity }: { activity: ActivityResult }) {
   const [done, setDone] = useState(false);
   return (
-    <Card className={done ? "border-success" : ""}>
+    <Card className={done ? "border-success bg-[#f7fff9]" : ""}>
       <h3 className="text-xl font-semibold text-text-primary">{activity.title}</h3>
       <div>
         <p className="text-sm font-semibold text-primary">Materials</p>
@@ -30,7 +30,7 @@ export function ActivityCard({ activity }: { activity: ActivityResult }) {
         <span className="font-semibold text-primary">Safety:</span> {activity.safety}
       </p>
       <Button variant={done ? "outline" : "accent"} onClick={() => setDone(true)} disabled={done}>
-        <CheckCircle2 className="h-4 w-4" /> {done ? "Done" : "Try This!"}
+        <CheckCircle2 className="h-4 w-4" /> {done ? "Marked as tried" : "Try this"}
       </Button>
     </Card>
   );

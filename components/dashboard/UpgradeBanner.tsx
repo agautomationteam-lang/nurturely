@@ -32,8 +32,8 @@ export function UpgradeBanner() {
         <div className="flex gap-3">
           <Sparkles className="mt-1 h-5 w-5 text-primary-light" />
           <div>
-            <h2 className="font-semibold">Upgrade to Peace Mode</h2>
-            <p className="mt-1 text-sm text-white/80">Unlimited asks, stories, activities, and Daily Peace texts for $19/month.</p>
+            <h2 className="font-semibold">You are close to today&apos;s free limit</h2>
+            <p className="mt-1 text-sm text-white/80">Peace Mode unlocks unlimited asks, stories, activities, and Daily Peace emails for $19/month.</p>
           </div>
         </div>
         <Button onClick={upgrade} disabled={loading} variant="accent">

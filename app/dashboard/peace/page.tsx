@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Mail, MessageSquare } from "lucide-react";
+import { CheckCircle2, Mail, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -29,16 +29,24 @@ async function saveDailyPeace(formData: FormData) {
   redirect("/dashboard/peace?saved=1");
 }
 
-export default async function DailyPeacePage() {
+export default async function DailyPeacePage({ searchParams }: { searchParams?: Promise<{ saved?: string }> }) {
   const user = await requireAppUser();
   const settings = user.dailyPeace;
+  const params = searchParams ? await searchParams : {};
+  const saved = params.saved === "1";
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-3xl font-semibold text-text-primary">Daily Peace</h1>
-        <p className="mt-2 text-text-secondary">One reassuring message every morning. Like a friend who gets it.</p>
+    <div className="space-y-6">
+      <div className="rounded-[28px] bg-primary p-6 text-white shadow-soft">
+        <p className="text-sm font-semibold uppercase tracking-wide text-primary-light">Morning support</p>
+        <h1 className="mt-2 text-3xl font-semibold">Daily Peace</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-white/80">One reassuring message every morning. Like a friend who gets it, without pretending parenting is easy.</p>
       </div>
+      {saved ? (
+        <div className="flex items-center gap-2 rounded-card border border-success/25 bg-[#f1fff6] px-4 py-3 text-sm font-semibold text-primary">
+          <CheckCircle2 className="h-5 w-5 text-success" /> Daily Peace settings saved.
+        </div>
+      ) : null}
       <div className="grid gap-5 lg:grid-cols-[1fr_0.8fr]">
         <Card>
           <form action={saveDailyPeace} className="space-y-5">
@@ -55,7 +63,7 @@ export default async function DailyPeacePage() {
             </div>
             <div className="flex items-center justify-between rounded-button bg-background p-4">
               <div>
-                <p className="font-medium text-text-primary">Daily texts</p>
+                <p className="font-medium text-text-primary">Daily emails</p>
                 <p className="text-sm text-text-secondary">Turn your morning encouragement on or off.</p>
               </div>
               <Switch name="isActive" defaultChecked={settings?.isActive ?? true} />

@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { CreditCard, ShieldAlert } from "lucide-react";
+import { CreditCard, Globe2, ShieldAlert, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,13 +26,14 @@ export default async function SettingsPage() {
   const plan = appUser.subscription?.status || "FREE";
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-3xl font-semibold text-text-primary">Settings</h1>
-        <p className="mt-2 text-text-secondary">Account, subscription, and billing controls.</p>
+    <div className="space-y-6">
+      <div className="rounded-[28px] bg-primary p-6 text-white shadow-soft">
+        <p className="text-sm font-semibold uppercase tracking-wide text-primary-light">Account center</p>
+        <h1 className="mt-2 text-3xl font-semibold">Settings</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-white/80">Keep your profile, timezone, and subscription aligned so Nurturely resets usage and billing correctly.</p>
       </div>
       <Card>
-        <h2 className="text-lg font-semibold text-text-primary">Account</h2>
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-text-primary"><UserRound className="h-5 w-5 text-primary" /> Account</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <div className="rounded-button bg-background p-4">
             <p className="text-sm text-text-secondary">Name</p>
@@ -44,7 +45,7 @@ export default async function SettingsPage() {
           </div>
         </div>
         <form action={updateProfile} className="mt-5 max-w-md space-y-2">
-          <Label htmlFor="timezone">Local timezone</Label>
+          <Label htmlFor="timezone" className="flex items-center gap-2"><Globe2 className="h-4 w-4 text-primary" /> Local timezone</Label>
           <div className="flex gap-2">
             <Input id="timezone" name="timezone" defaultValue={appUser.timezone} placeholder="America/Edmonton" />
             <Button type="submit">Save</Button>
@@ -65,7 +66,7 @@ export default async function SettingsPage() {
       <Card className="border-danger/20">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-danger"><ShieldAlert className="h-5 w-5" /> Danger zone</h2>
         <p className="mt-2 text-sm text-text-secondary">Delete account requests should be confirmed through support so child-related content can be removed carefully.</p>
-        <Button className="mt-4" variant="danger">Delete account</Button>
+        <Button className="mt-4" variant="danger" disabled>Contact support to delete</Button>
       </Card>
     </div>
   );

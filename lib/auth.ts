@@ -2,6 +2,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
 import { localDateKey } from "@/lib/utils";
 
+const userInclude = { subscription: true, usage: true, dailyPeace: true } as const;
+
 export async function requireAppUser() {
   const clerkUser = await currentUser();
   if (!clerkUser) {
@@ -14,6 +16,7 @@ export async function requireAppUser() {
   }
 
   const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || clerkUser.username || null;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 
   const user = await prisma.user.upsert({
     where: { clerkUserId: clerkUser.id },
@@ -21,11 +24,12 @@ export async function requireAppUser() {
       clerkUserId: clerkUser.id,
       email,
       name,
+      timezone: timeZone,
       subscription: { create: { status: "FREE" } },
-      usage: { create: { date: localDateKey("UTC") } }
+      usage: { create: { date: localDateKey(timeZone) } }
     },
     update: { email, name, deletedAt: null },
-    include: { subscription: true, usage: true, dailyPeace: true }
+    include: userInclude
   });
 
   if (!user.subscription) {
@@ -48,6 +52,6 @@ export async function requireAppUser() {
 
   return prisma.user.findUniqueOrThrow({
     where: { clerkUserId: user.clerkUserId },
-    include: { subscription: true, usage: true, dailyPeace: true }
+    include: userInclude
   });
 }
