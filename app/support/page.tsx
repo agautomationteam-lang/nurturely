@@ -4,7 +4,7 @@ import { Logo } from "@/components/shared/Logo";
 
 const faqs = [
   ["How do I cancel?", "Open Dashboard > Settings and choose Manage Billing. Stripe handles plan changes and cancellations securely."],
-  ["What does the free plan include?", "Free parents get 3 AI interactions per day across Ask, Stories, and Activities, plus Daily Peace setup."],
+  ["What does the free plan include?", "Free parents get 20 AI interactions per day across Ask, Stories, and Activities, plus Daily Peace setup."],
   ["How do Daily Peace emails work?", "Choose a preferred delivery time and turn Daily Peace on. Nurturely sends a short reassuring email when scheduled."],
   ["How private is my data?", "We store account, usage, chat, story, activity, and Daily Peace data to operate the product. We do not sell personal data."],
   ["Is Nurturely always accurate?", "No AI is perfect. Nurturely offers general parenting support, not medical, legal, emergency, or mental health advice."]

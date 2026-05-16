@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { CheckoutButton } from "@/components/shared/CheckoutButton";
 
 const plans = [
-  { name: "Free", price: "$0", description: "3 AI interactions per day", items: ["Ask parenting questions", "Stories and activities", "Daily Peace setup"], featured: false },
+  { name: "Free", price: "$0", description: "20 AI interactions per day", items: ["Ask parenting questions", "Stories and activities", "Daily Peace setup"], featured: false },
   { name: "Peace Mode", price: "$19/mo", description: "Unlimited calm moments", items: ["Unlimited AI support", "Unlimited stories", "Unlimited activities", "Daily Peace emails"], featured: true },
   { name: "Family Mode", price: "$29/mo", description: "For shared caregiving", items: ["Everything in Peace Mode", "More caregiver seats", "Family-oriented guidance"], featured: false }
 ];
