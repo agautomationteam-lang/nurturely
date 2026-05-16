@@ -7,15 +7,16 @@ import { Button, type ButtonProps } from "@/components/ui/button";
 
 type CheckoutButtonProps = ButtonProps & {
   priceId?: string;
+  plan?: "peace" | "family";
   children: React.ReactNode;
 };
 
-export function CheckoutButton({ priceId, children, className, variant = "default", ...props }: CheckoutButtonProps) {
+export function CheckoutButton({ priceId, plan, children, className, variant = "default", ...props }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
 
   async function startCheckout() {
-    if (!priceId) {
-      toast.error("Payment service unavailable, try again");
+    if (!priceId && !plan) {
+      toast.error("Stripe price is not configured. Add the price ID in Vercel.");
       return;
     }
     setLoading(true);
@@ -23,7 +24,7 @@ export function CheckoutButton({ priceId, children, className, variant = "defaul
       const response = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId })
+        body: JSON.stringify({ priceId, plan })
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.url) throw new Error(data.error || "Payment service unavailable, try again");

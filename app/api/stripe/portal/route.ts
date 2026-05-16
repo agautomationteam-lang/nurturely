@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ url: session.url });
   } catch (error) {
+    console.error("Stripe error:", error);
     console.error("Stripe portal error", error);
     return NextResponse.json({ error: "Payment service unavailable, try again" }, { status: 503 });
   }

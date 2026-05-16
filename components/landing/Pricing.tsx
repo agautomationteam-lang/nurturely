@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Check, Star } from "lucide-react";
-import { SignUpButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -42,20 +41,20 @@ export function Pricing() {
             </ul>
             {plan.name === "Free" ? (
               <div className="mt-7">
-                <SignUpButton mode="modal">
-                  <Button className="w-full transition hover:scale-[1.02]" variant="outline">Get Started Free</Button>
-                </SignUpButton>
-                <p className="mt-2 text-center text-xs text-text-secondary">✓ No credit card required</p>
+                <Button asChild className="w-full transition hover:scale-[1.02]" variant="outline">
+                  <Link href="/sign-up">Get Started Free</Link>
+                </Button>
+                <p className="mt-2 text-center text-xs text-text-secondary">No credit card required</p>
               </div>
             ) : plan.name === "Peace Mode" ? (
               <div className="mt-7">
-                <CheckoutButton className="w-full transition hover:scale-[1.02]" variant="accent" priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ID}>Start Peace Mode</CheckoutButton>
-                <p className="mt-2 text-center text-xs text-white/75">Cancel anytime. No commitment.</p>
+                <CheckoutButton className="w-full transition hover:scale-[1.02]" variant="accent" priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ID} plan="peace">Start Peace Mode</CheckoutButton>
+                <p className="mt-2 text-center text-xs text-white/75">Cancel anytime.</p>
               </div>
             ) : (
               <div className="mt-7">
-                <CheckoutButton className="w-full transition hover:scale-[1.02]" variant="outline" priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_FAMILY}>Start Family Mode</CheckoutButton>
-                <p className="mt-2 text-center text-xs text-text-secondary">Cancel anytime. No commitment.</p>
+                <CheckoutButton className="w-full transition hover:scale-[1.02]" variant="outline" priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_FAMILY} plan="family">Start Family Mode</CheckoutButton>
+                <p className="mt-2 text-center text-xs text-text-secondary">Cancel anytime.</p>
               </div>
             )}
           </Card>

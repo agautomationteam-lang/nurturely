@@ -64,6 +64,12 @@ export default async function SettingsPage() {
         </div>
         <div className="mt-5 rounded-button bg-background p-4 text-sm text-text-secondary">Billing history is available in the Stripe Customer Portal after your first checkout.</div>
       </Card>
+      <Card>
+        <h2 className="text-lg font-semibold text-text-primary">Support</h2>
+        <p className="mt-2 text-text-secondary">
+          Need help? Email us at <a className="font-semibold text-primary" href="mailto:agautomationteam@gmail.com">agautomationteam@gmail.com</a>.
+        </p>
+      </Card>
       <Card className="border-danger/20">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-danger"><ShieldAlert className="h-5 w-5" /> Account actions</h2>
         <p className="mt-2 text-sm text-text-secondary">Sign out when you are finished. Account deletion requests should go through support.</p>

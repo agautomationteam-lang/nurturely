@@ -45,12 +45,12 @@ export default async function LandingPage() {
       <footer className="mx-auto flex max-w-content flex-col gap-4 border-t border-primary/10 px-4 py-8 text-sm text-text-secondary md:flex-row md:items-center md:justify-between md:px-6">
         <p>© 2026 Nurturely. Built with love for parents.</p>
         <div className="flex gap-4">
-          <Link href="/sign-in">Sign in</Link>
-          <Link href="/sign-up">Create account</Link>
-          <Link href="#pricing">Pricing</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
+          <Link href="/privacy">Privacy Policy</Link>
+          <Link href="/terms">Terms of Service</Link>
+          <Link href="/contact">Contact</Link>
+          <Link href="/support">Support</Link>
         </div>
+        <a href="mailto:agautomationteam@gmail.com">agautomationteam@gmail.com</a>
       </footer>
     </main>
   );
